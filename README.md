@@ -1,6 +1,10 @@
 # 🇵🇭 Anti-Censorship Discord & Community Gateway (PH ISP Bypass)
 
-A high-performance, open-source routing gateway built to bypass Discord voice/RTC drops, streaming issues, and online censorship implemented by Philippine telecommunications providers (**Globe**, **PLDT / Smart**, **Converge ICT**, and **DITO**).
+> [!NOTE]
+> **📢 Project Status: Proof of Concept / Seeking Community Testers (RFC)**  
+> I built this architecture, wrote all automated deployment scripts, Marzban/Xray-core configs, and security firewall rules as an open-source concept. Because I don't currently have a running VPS instance, **I am calling on Philippine developers, gamers, and students (especially those with GitHub Student Pack DO/Azure credits) who have a VPS to spin it up, test the routing, and contribute!**
+
+A high-performance, open-source routing gateway built to bypass Discord voice/RTC drops, streaming issues, and potential online censorship implemented by Philippine telecommunications providers (**Globe**, **PLDT / Smart**, **Converge ICT**, and **DITO**).
 
 ---
 
