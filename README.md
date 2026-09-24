@@ -23,6 +23,23 @@ This repository supports two production deployment architectures depending on yo
 
 ---
 
+## 🚀 Deploy Your Own Gateway (Anyone Can Become a Host!)
+
+This project is open-source so that **any IT student, graduate, gamer, or community member can host their own gateway** for their friends, school, or gaming clan.
+
+You don't need expensive infrastructure. A basic $3.50/mo Singapore VPS (or free cloud credits from the [GitHub Student Developer Pack](https://education.github.com/pack)) plus your home PC/laptop is all it takes!
+
+### ⚡ 1-Minute Interactive Quickstart:
+Clone the repository and run our setup wizard on any machine:
+```bash
+git clone https://github.com/Reneilrp/discord-gateway.git
+cd discord-gateway
+./quickstart.sh
+```
+The wizard will detect your operating system (Windows/Linux/Mac/VPS) and guide you step-by-step through configuring your forwarder or launching the Marzban web UI.
+
+---
+
 ## 🎯 The Host Checklist: What Is Left For You To Do?
 
 All configuration files, Docker Compose definitions, automation scripts, and Windows power policies are fully written and verified in this repository.
