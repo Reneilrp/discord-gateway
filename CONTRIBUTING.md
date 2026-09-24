@@ -1,33 +1,53 @@
 # Contributing to Discord & Censorship Bypass Gateway (PH)
 
-Mabuhay! We welcome contributions from Filipino developers, network engineers, and open-source contributors to help keep the internet open, accessible, and fast for everyone in the Philippines.
+Mabuhay! We welcome contributions from Filipino developers, network engineers, sysadmins, and open-source contributors to help keep the internet open, uncensored, and fast for everyone across the Philippines.
 
 ---
 
 ## The Problem We Are Solving
 
-Philippine ISPs (Globe, PLDT, Smart, Converge, DITO) frequently implement DNS poisoning, IP blackholing, and aggressive Deep Packet Inspection (DPI) affecting Discord (voice/RTC channels, streaming), Reddit, and various online services.
+Philippine ISPs (**Globe**, **PLDT / Smart**, **Converge ICT**, **DITO**) frequently implement DNS poisoning, IP blackholing, and aggressive Deep Packet Inspection (DPI) affecting Discord (voice/RTC channels, streaming), Reddit, and various online services.
 
 Traditional commercial VPNs often get blocked, suffer from terrible latency, or cost expensive monthly fees. Hosting a full VPN server directly on a cheap VPS ($3.50/mo) crashes under multi-user video/voice loads.
 
 This repository provides **two production-grade architectures**:
 1. **Direct VPS Gateway (`/`)**: WireGuard on a VPS with a strict iptables kernel firewall that allows *only* Discord traffic and DNS, dropping everything else.
-2. **Reverse Tunnel Gateway (`marzban-wsl/` & `reverse-tunnel/`)**: A Singapore VPS acts solely as an iptables "Traffic Forwarder", tunneling traffic to a home laptop (Windows 11 Pro + WSL 2) running **Marzban (Xray-core)**. The laptop's CPU, RAM, and 500+ Mbps home connection handle all the crypto and multi-user load.
+2. **Reverse Tunnel Gateway (`marzban-wsl/` & `reverse-tunnel/`)**: A Singapore VPS acts solely as an iptables "Traffic Forwarder", tunneling traffic to a home laptop or PC running **Marzban (Xray-core)**. The host's CPU, RAM, and 500+ Mbps home connection handle all the crypto and multi-user load.
 
 ---
 
-## Priority Areas Where We Need Help & Changes
+## 💻 Multi-OS Host Support Matrix
 
-### 1. Additional Blocked Services & CIDR Lists
+Not everyone runs Windows 11! The laptop/home server can run on **Linux**, **macOS**, or **Windows**. Here is how the setup differs across operating systems:
+
+| OS | Container Engine | WireGuard Client | Power & Lid Management (24/7 Server Mode) | Setup Script |
+| :--- | :--- | :--- | :--- | :--- |
+| **Windows 11 Pro** | Docker in WSL 2 Ubuntu | WireGuard for Windows (GUI) | `windows-power-settings.bat` (LIDACTION=0, standby=0) | `marzban-wsl/windows/` |
+| **Linux (Ubuntu/Debian/Arch/Fedora)** | **Native Docker Engine** (Fastest, lowest overhead) | `wg-quick` (`/etc/wireguard/wg0.conf`) | `systemd-logind` (`HandleLidSwitch=ignore`) | [`host-os/linux/linux-server-prep.sh`](file:///home/pheinz/discord-gateway/host-os/linux/linux-server-prep.sh) |
+| **macOS (Apple Silicon & Intel)** | **OrbStack** (recommended) or Docker Desktop | WireGuard for Mac (App Store) or `brew install wireguard-tools` | `pmset -c sleep 0` or *Amphetamine* app | [`host-os/macos/macos-server-prep.sh`](file:///home/pheinz/discord-gateway/host-os/macos/macos-server-prep.sh) |
+
+### Notes for Linux Contributors
+- Linux is the most lightweight and native platform for this setup.
+- There is **zero WSL overhead**: Docker Compose and WireGuard run natively on the host kernel.
+- Run `sudo ./host-os/linux/linux-server-prep.sh` to automatically disable sleep on lid close and install prerequisites.
+
+### Notes for macOS Contributors
+- On macOS, Docker runs inside a lightweight Linux hypervisor.
+- We strongly recommend [OrbStack](https://orbstack.dev/) instead of Docker Desktop (it uses 10x less battery and starts in under 2 seconds).
+- Because macOS sleeps aggressively, run `./host-os/macos/macos-server-prep.sh` or use the free *Amphetamine* app from the App Store.
+
+---
+
+## 🚀 Priority Areas Where We Need Help & Changes
+
+### 1. Cross-Platform Automation Scripts
+- [ ] **Windows**: Create a unified `install-windows.ps1` that checks WSL status, copies `.wslconfig`, and configures power policies in one click.
+- [ ] **Linux**: Create a `systemd` service file to auto-start WireGuard and Marzban on laptop boot (`discord-gateway.service`).
+- [ ] **macOS**: Create a `launchd` plist to auto-start the node on MacBook boot.
+
+### 2. Additional Blocked Services & CIDR Lists
 - [ ] Add scripts to fetch CIDR blocks and domains for **Reddit** and other throttled community platforms.
 - [ ] Implement an automated GitHub Actions cron job that runs weekly to verify and commit updated BGP ASN announced prefixes.
-
-### 2. Windows 11 PowerShell Automation
-- [ ] Create a one-click `install-windows.ps1` that automatically:
-  - Checks if WSL 2 is installed.
-  - Automatically copies `.wslconfig` to `$env:USERPROFILE\.wslconfig`.
-  - Configures the network adapter power management.
-  - Downloads the official WireGuard for Windows installer if missing.
 
 ### 3. VLESS-Reality & TLS Spoofing
 - [ ] Add automated setup for **Xray-core Reality** (stealth TLS spoofing against SNI blocking).
@@ -42,7 +62,7 @@ We need community members across different telcos to benchmark and report findin
 
 ---
 
-## Development & Testing Workflow
+## 🧪 Development & Testing Workflow
 
 ### Running the Test Suite
 Before submitting any pull request, make sure all automated verification checks pass:
@@ -59,10 +79,10 @@ cd discord-gateway
 
 ---
 
-## Submitting Pull Requests
+## 📝 Submitting Pull Requests
 1. Fork the repository.
 2. Create your feature branch (`git checkout -b feature/awesome-improvement`).
-3. Commit your changes (`git commit -m "Add automated Reddit CIDR fetcher"`).
+3. Commit your changes (`git commit -m "Add Linux systemd auto-start service"`).
 4. Run the test suite: `./scripts/test-suite.sh`.
 5. Push to the branch (`git push origin feature/awesome-improvement`).
-6. Open a Pull Request with a clear description of what was tested and on which ISP.
+6. Open a Pull Request with a clear description of what was tested and on which OS / ISP.

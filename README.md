@@ -34,20 +34,22 @@ Here is the exact step-by-step checklist of what is left for **you** to perform:
         sudo ./marzban-wsl/vps/setup-vps-marzban-forwarder.sh
         (Enables IP forwarding and forwards Port 443 down the tunnel).
 
-[ ] 3. On Windows 11: Set up Mirrored Networking & Power Settings:
-        - Copy .wslconfig to C:\Users\<YourUsername>\.wslconfig
-        - Run windows-power-settings.bat as Admin (prevents laptop sleep when lid is closed)
-        - In Device Manager -> Network Adapter -> Properties -> uncheck "Allow computer to turn off device"
+[ ] 3. On Your Laptop / Home Server:
+        - If Windows 11 Pro:
+            • Copy .wslconfig to C:\Users\<YourUsername>\.wslconfig & wsl --shutdown
+            • Run windows-power-settings.bat as Admin (prevents laptop sleep on lid close)
+            • Activate WireGuard for Windows (IP: 10.0.0.2/24, PersistentKeepalive = 25)
+            • In WSL 2: cd marzban-wsl && ./setup-marzban.sh
+        - If Linux (Ubuntu / Debian / Arch / Fedora):
+            • Run: sudo ./host-os/linux/linux-server-prep.sh (disables lid sleep & enables forwarding)
+            • Start WireGuard: sudo wg-quick up wg0
+            • Start Marzban natively: cd marzban-wsl && ./setup-marzban.sh
+        - If macOS (MacBook):
+            • Run: ./host-os/macos/macos-server-prep.sh (sets pmset sleep prevention)
+            • Activate WireGuard for Mac app (App Store or Homebrew)
+            • Start Marzban: cd marzban-wsl && docker compose up -d
 
-[ ] 4. On Windows 11: Connect the official WireGuard for Windows app:
-        - Add tunnel with IP 10.0.0.2/24 and PersistentKeepalive = 25.
-        - Click Activate.
-
-[ ] 5. In WSL 2 Ubuntu: Start Marzban:
-        cd marzban-wsl && ./setup-marzban.sh
-        - Enter your desired admin username and password.
-
-[ ] 6. In Windows Browser: Access http://127.0.0.1:8000/dashboard/
+[ ] 4. In Browser: Access http://127.0.0.1:8000/dashboard/
         - Click "Users" -> "Create User" (e.g. friend_name).
         - Copy the vless:// link or QR code and send it to your friend!
 ```
@@ -58,16 +60,16 @@ Here is the exact step-by-step checklist of what is left for **you** to perform:
 
 ```
 .
-├── marzban-wsl/                     # [RECOMMENDED] Windows 11 + WSL 2 Marzban Web UI Stack
+├── marzban-wsl/                     # [RECOMMENDED] Web UI Stack (WSL 2 / Native Docker)
 │   ├── docker-compose.yml           # Marzban & Xray-core container definition
 │   ├── setup-marzban.sh             # 1-click installer and admin creator
-│   ├── windows/
-│   │   ├── .wslconfig               # Windows 11 mirrored networking configuration
-│   │   ├── windows-power-settings.bat # Disables sleep on lid close via powercfg
-│   │   └── windows-portproxy-setup.ps1# NAT portproxy fallback for older Windows builds
-│   ├── vps/
-│   │   └── setup-vps-marzban-forwarder.sh # VPS port 443 forwarder script
-│   └── README.md                    # Detailed Marzban WSL deployment guide
+│   ├── windows/                     # Windows 11 power policies & .wslconfig
+│   ├── vps/                         # VPS port 443 forwarder script
+│   └── README.md                    # Detailed Marzban deployment guide
+│
+├── host-os/                         # Multi-OS Host Setup Scripts
+│   ├── linux/                       # Linux laptop prep (systemd-logind lid ignore, wg-quick)
+│   └── macos/                       # macOS MacBook prep (pmset sleep prevention, OrbStack)
 │
 ├── reverse-tunnel/                  # Pure Docker / Linux Laptop Reverse Tunnel (Headless)
 │   ├── docker-compose.yml           # Xray-core container
