@@ -59,6 +59,26 @@ Here is the exact step-by-step checklist of what is left for **you** to perform:
 
 ---
 
+## 🌐 Shared Community Hub (1 VPS, Multiple Laptops)
+
+**What if a friend or community member wants to host for their squad using their laptop, but DOES NOT want to buy or configure a VPS?**
+
+A single $3.50/mo Singapore VPS can act as a **Shared Community Hub** for multiple laptops across the Philippines:
+- **You (The Hub Owner)**: Run the Singapore VPS.
+- **Your Friend (Laptop Node Host)**: Connects their laptop (in Cebu, Davao, Manila, etc.) to your VPS without paying for cloud servers or configuring complex Linux firewalls.
+- **Their Friends**: Connect to `YOUR_VPS_IP:<THEIR_PORT>` (e.g. port `8443`). The VPS forwards traffic directly to *their* laptop using *their* home internet!
+
+### How to add a friend's laptop to your VPS Hub:
+On your VPS, run:
+```bash
+sudo ./marzban-wsl/vps/add-laptop-node.sh --name "friend_laptop" --port 8443
+```
+1. Automatically assigns an internal tunnel IP (e.g. `10.0.0.3`) and configures `iptables` to forward public port `8443` -> `10.0.0.3:443`.
+2. Generates a client configuration block for your friend's laptop.
+3. Your friend imports it into WireGuard, launches Marzban ([`marzban-wsl/`](file:///home/pheinz/discord-gateway/marzban-wsl)), and their squad connects through `YOUR_VPS_IP:8443`!
+
+---
+
 ## 📁 Repository Structure
 
 ```
