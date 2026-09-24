@@ -1,0 +1,32 @@
+[wsl2]
+# ==============================================================================
+# Windows 11 Pro .wslconfig Configuration
+# Place this file in: C:\Users\<YourUsername>\.wslconfig
+# Apply by running in PowerShell: wsl --shutdown
+# ==============================================================================
+
+# Mirrored Networking Mode (Available on Windows 11 22H2 / 23H2+):
+# Shares the Windows 11 network stack directly with WSL 2.
+# When WireGuard on Windows binds to 10.0.0.2, Marzban in WSL automatically
+# listens on 10.0.0.2:443 and 10.0.0.2:8000 without requiring netsh portproxy!
+networkingMode=mirrored
+
+# Automatically sync HTTP proxy settings from Windows to WSL
+autoProxy=true
+
+# Tunnel DNS requests through Windows DNS resolver to prevent DNS poisoning
+dnsTunneling=true
+
+# Integrate Windows Defender Firewall rules with WSL
+firewall=true
+
+# Disable GUI subsystem if running headless to conserve RAM/CPU
+guiApplications=false
+
+# Hardware resource allocation (adjust according to your laptop specs)
+memory=4GB
+processors=4
+
+[experimental]
+# Automatically free up cached memory when idle
+autoMemoryReclaim=gradual

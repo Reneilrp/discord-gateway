@@ -1,0 +1,17 @@
+services:
+  xray:
+    image: ghcr.io/xtls/xray-core:latest
+    container_name: xray-laptop-gateway
+    restart: unless-stopped
+    # Port mappings:
+    # 443: VLESS inbound (for Xray clients: v2rayNG, Nekoray, FoXray)
+    # 8443: Secondary VLESS/WebSocket port
+    # 10808: SOCKS5 proxy (for browser proxy or apps without VLESS support)
+    ports:
+      - "443:443"
+      - "8443:8443"
+      - "10808:10808"
+    volumes:
+      - ./config:/etc/xray:ro
+    environment:
+      - XRAY_LOCATION_ASSET=/usr/share/xray

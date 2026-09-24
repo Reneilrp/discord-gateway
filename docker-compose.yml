@@ -1,0 +1,64 @@
+services:
+  wg-easy:
+    image: ghcr.io/wg-easy/wg-easy:${WG_EASY_TAG:-15}
+    container_name: wg-easy
+    restart: unless-stopped
+
+    # Networking & Port Mappings
+    # Default is standard bridge with exposed ports.
+    # Note: If host networking is preferred (to bind wg0 directly to the VPS host),
+    # comment 'ports:' and uncomment 'network_mode: host'.
+    ports:
+      - "${WG_PORT:-51820}:51820/udp"
+      - "${PORT:-51821}:51821/tcp"
+    # network_mode: host
+
+    # Environment Configuration
+    # Variables are loaded from .env file
+    environment:
+      # Public VPS address or domain that WireGuard clients connect to
+      - WG_HOST=${WG_HOST:-your-vps-ip-or-domain}
+
+      # Web Dashboard Administration
+      - PORT=${PORT:-51821}
+      - INSECURE=${INSECURE:-true}
+      - PASSWORD_HASH=${PASSWORD_HASH:-}
+      # Plaintext password (only used if PASSWORD_HASH is empty)
+      - PASSWORD=${PASSWORD:-}
+
+      # WireGuard Server Settings
+      - WG_PORT=${WG_PORT:-51820}
+      - WG_DEFAULT_ADDRESS=${WG_DEFAULT_ADDRESS:-10.8.0.x}
+      - WG_DEFAULT_DNS=${WG_DEFAULT_DNS:-1.1.1.1,1.0.0.1}
+      - WG_PERSISTENT_KEEPALIVE=${WG_PERSISTENT_KEEPALIVE:-25}
+      - WG_MTU=${WG_MTU:-1420}
+
+      # Split Tunneling: Default AllowedIPs for generated client configurations
+      # When populated by fetch-discord-cidrs.sh, newly created clients route
+      # exclusively Discord + DNS traffic through the WireGuard tunnel.
+      - WG_ALLOWED_IPS=${WG_ALLOWED_IPS:-}
+
+      # Unattended Initialization (wg-easy v15+)
+      - INIT_ENABLED=${INIT_ENABLED:-true}
+      - INIT_USERNAME=${INIT_USERNAME:-admin}
+      - INIT_PASSWORD=${INIT_PASSWORD:-}
+      - INIT_HOST=${WG_HOST:-your-vps-ip-or-domain}
+      - INIT_PORT=${WG_PORT:-51820}
+      - INIT_DNS=${WG_DEFAULT_DNS:-1.1.1.1,1.0.0.1}
+      - INIT_IPV4_CIDR=${INIT_IPV4_CIDR:-10.8.0.0/24}
+      - INIT_ALLOWED_IPS=${INIT_ALLOWED_IPS:-}
+
+    # Volume Mounts for persistent configuration and host kernel modules
+    volumes:
+      - ./data:/etc/wireguard
+      - /lib/modules:/lib/modules:ro
+
+    # Required Linux Capabilities for WireGuard network operations
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+
+    # Kernel sysctls inside container namespace
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv4.conf.all.src_valid_mark=1

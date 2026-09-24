@@ -1,0 +1,114 @@
+{
+  "log": {
+    "loglevel": "warning"
+  },
+  "dns": {
+    "servers": [
+      "https+local://1.1.1.1/dns-query",
+      "1.1.1.1",
+      "8.8.8.8"
+    ]
+  },
+  "inbounds": [
+    {
+      "tag": "vless-in",
+      "port": 443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "e4d29f8c-8472-4d2a-98b7-6b47c92b0001",
+            "flow": "",
+            "email": "friend-1@discord-gateway"
+          },
+          {
+            "id": "e4d29f8c-8472-4d2a-98b7-6b47c92b0002",
+            "flow": "",
+            "email": "friend-2@discord-gateway"
+          },
+          {
+            "id": "e4d29f8c-8472-4d2a-98b7-6b47c92b0003",
+            "flow": "",
+            "email": "friend-3@discord-gateway"
+          },
+          {
+            "id": "e4d29f8c-8472-4d2a-98b7-6b47c92b0004",
+            "flow": "",
+            "email": "family@discord-gateway"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "none"
+      }
+    },
+    {
+      "tag": "vless-ws-in",
+      "port": 8443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "e4d29f8c-8472-4d2a-98b7-6b47c92b0001",
+            "email": "friend-ws@discord-gateway"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "/discord-gateway"
+        }
+      }
+    },
+    {
+      "tag": "socks-in",
+      "port": 10808,
+      "protocol": "socks",
+      "settings": {
+        "auth": "password",
+        "accounts": [
+          {
+            "user": "friend",
+            "pass": "discordgateway2026"
+          }
+        ],
+        "udp": true
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIP"
+      }
+    },
+    {
+      "tag": "blocked",
+      "protocol": "blackhole",
+      "settings": {}
+    }
+  ],
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "rules": [
+      {
+        "type": "field",
+        "ip": [
+          "geoip:private"
+        ],
+        "outboundTag": "blocked"
+      },
+      {
+        "type": "field",
+        "network": "tcp,udp",
+        "outboundTag": "direct"
+      }
+    ]
+  }
+}

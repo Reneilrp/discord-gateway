@@ -1,0 +1,21 @@
+services:
+  marzban:
+    image: gozargah/marzban:latest
+    container_name: marzban
+    restart: unless-stopped
+    env_file: .env
+
+    # Port Mappings:
+    # 8000: Marzban Web UI & Client Subscription Endpoint
+    # 443:  VLESS / Xray proxy traffic (forwarded from VPS)
+    # 8443: Secondary VLESS/WebSocket port
+    ports:
+      - "8000:8000"
+      - "443:443"
+      - "8443:8443"
+
+    # Alternatively, you can uncomment 'network_mode: host' if using WSL 2 mirrored networking:
+    # network_mode: host
+
+    volumes:
+      - ./data:/var/lib/marzban
