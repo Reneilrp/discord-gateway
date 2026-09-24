@@ -1,57 +1,38 @@
-# Contributing to Discord & Censorship Bypass Gateway (PH)
+# 🇵🇭 Contributing Guide: Anti-Censorship Gateway
 
 Mabuhay! We welcome contributions from Filipino developers, network engineers, sysadmins, and open-source contributors to help keep the internet open, uncensored, and fast for everyone across the Philippines.
 
 ---
 
-## The Problem We Are Solving
+## 📖 Contributor Setup Guides by Operating System
 
-Philippine ISPs (**Globe**, **PLDT / Smart**, **Converge ICT**, **DITO**) frequently implement DNS poisoning, IP blackholing, and aggressive Deep Packet Inspection (DPI) affecting Discord (voice/RTC channels, streaming), Reddit, and various online services.
+Before contributing features, testing PRs, or reporting ISP benchmarks, set up your local development node following the dedicated guide for your machine's operating system:
 
-Traditional commercial VPNs often get blocked, suffer from terrible latency, or cost expensive monthly fees. Hosting a full VPN server directly on a cheap VPS ($3.50/mo) crashes under multi-user video/voice loads.
-
-This repository provides **two production-grade architectures**:
-1. **Direct VPS Gateway (`/`)**: WireGuard on a VPS with a strict iptables kernel firewall that allows *only* Discord traffic and DNS, dropping everything else.
-2. **Reverse Tunnel Gateway (`marzban-wsl/` & `reverse-tunnel/`)**: A Singapore VPS acts solely as an iptables "Traffic Forwarder", tunneling traffic to a home laptop or PC running **Marzban (Xray-core)**. The host's CPU, RAM, and 500+ Mbps home connection handle all the crypto and multi-user load.
-
----
-
-## 💻 Multi-OS Host Support Matrix
-
-Not everyone runs Windows 11! The laptop/home server can run on **Linux**, **macOS**, or **Windows**. Here is how the setup differs across operating systems:
-
-| OS | Container Engine | WireGuard Client | Power & Lid Management (24/7 Server Mode) | Setup Script |
-| :--- | :--- | :--- | :--- | :--- |
-| **Windows 11 Pro** | Docker in WSL 2 Ubuntu | WireGuard for Windows (GUI) | `windows-power-settings.bat` (LIDACTION=0, standby=0) | `marzban-wsl/windows/` |
-| **Linux (Ubuntu/Debian/Arch/Fedora)** | **Native Docker Engine** (Fastest, lowest overhead) | `wg-quick` (`/etc/wireguard/wg0.conf`) | `systemd-logind` (`HandleLidSwitch=ignore`) | [`host-os/linux/linux-server-prep.sh`](file:///home/pheinz/discord-gateway/host-os/linux/linux-server-prep.sh) |
-| **macOS (Apple Silicon & Intel)** | **OrbStack** (recommended) or Docker Desktop | WireGuard for Mac (App Store) or `brew install wireguard-tools` | `pmset -c sleep 0` or *Amphetamine* app | [`host-os/macos/macos-server-prep.sh`](file:///home/pheinz/discord-gateway/host-os/macos/macos-server-prep.sh) |
-
-### Notes for Linux Contributors
-- Linux is the most lightweight and native platform for this setup.
-- There is **zero WSL overhead**: Docker Compose and WireGuard run natively on the host kernel.
-- Run `sudo ./host-os/linux/linux-server-prep.sh` to automatically disable sleep on lid close and install prerequisites.
-
-### Notes for macOS Contributors
-- On macOS, Docker runs inside a lightweight Linux hypervisor.
-- We strongly recommend [OrbStack](https://orbstack.dev/) instead of Docker Desktop (it uses 10x less battery and starts in under 2 seconds).
-- Because macOS sleeps aggressively, run `./host-os/macos/macos-server-prep.sh` or use the free *Amphetamine* app from the App Store.
+| Operating System | Dedicated Setup Guide | Container Engine | WireGuard Client |
+| :--- | :--- | :--- | :--- |
+| **Windows 11 Pro** | 🪟 [**Windows 11 Setup Guide**](docs/WINDOWS.md) | Docker in WSL 2 Ubuntu | WireGuard for Windows |
+| **Linux (Ubuntu/Debian/Arch/Fedora)** | 🐧 [**Linux Setup Guide**](docs/LINUX.md) | Native Docker (Zero VM overhead) | Native `wg-quick` (`wg0.conf`) |
+| **macOS (M1-M4 & Intel)** | 🍎 [**macOS Setup Guide**](docs/MACOS.md) | [OrbStack](https://orbstack.dev/) or Docker Desktop | WireGuard for Mac |
 
 ---
 
-## 🚀 Priority Areas Where We Need Help & Changes
+## 🎯 Priority Areas Where We Need Help & Changes
 
-### 1. Cross-Platform Automation Scripts
-- [ ] **Windows**: Create a unified `install-windows.ps1` that checks WSL status, copies `.wslconfig`, and configures power policies in one click.
-- [ ] **Linux**: Create a `systemd` service file to auto-start WireGuard and Marzban on laptop boot (`discord-gateway.service`).
+We are looking for community pull requests in the following specific areas:
+
+### 1. Additional Blocked Services & Automated CIDR Fetchers
+- [ ] **Reddit & Media CDNs**: Enhance [`fetch-service-cidrs.sh`](file:///home/pheinz/discord-gateway/fetch-service-cidrs.sh) with direct BGP updates for newly announced Fastly/Reddit Anycast IP pools.
+- [ ] **Gaming Endpoints & Voice Relays**: Add CIDR profiles for Valorant, Steam, or Twitch voice servers throttled during peak hours.
+- [ ] **Automated GitHub Actions**: Implement a weekly GitHub Actions workflow that automatically queries RIPE NCC BGP RIS and commits fresh CIDR blocks.
+
+### 2. OS-Specific Automation Scripts
+- [ ] **Windows 11**: Create a unified `install-windows.ps1` PowerShell script that detects WSL 2, copies `.wslconfig`, and configures power policies in one click.
+- [ ] **Linux**: Create a `discord-gateway.service` systemd unit file to auto-start the WireGuard tunnel and Marzban container on system boot.
 - [ ] **macOS**: Create a `launchd` plist to auto-start the node on MacBook boot.
 
-### 2. Additional Blocked Services & CIDR Lists
-- [ ] Add scripts to fetch CIDR blocks and domains for **Reddit** and other throttled community platforms.
-- [ ] Implement an automated GitHub Actions cron job that runs weekly to verify and commit updated BGP ASN announced prefixes.
-
-### 3. VLESS-Reality & TLS Spoofing
-- [ ] Add automated setup for **Xray-core Reality** (stealth TLS spoofing against SNI blocking).
+### 3. VLESS-Reality & Stealth TLS Spoofing
 - [ ] Pre-configure target SNIs with high Philippine CDN presence (e.g. `gateway.discord.gg`, `dl.google.com`, `www.microsoft.com`).
+- [ ] Add automated Reality private/public key generation within [`scripts/toggle-services.sh`](file:///home/pheinz/discord-gateway/scripts/toggle-services.sh).
 
 ### 4. ISP Testing & Latency Benchmarks
 We need community members across different telcos to benchmark and report findings:
@@ -72,7 +53,7 @@ cd discord-gateway
 ./scripts/test-suite.sh
 ```
 
-### Script Guidelines
+### Script & Code Guidelines
 - Write POSIX-compliant or bash scripts with `set -euo pipefail`.
 - Always implement a `--dry-run` flag in scripts that modify `iptables` or system firewall rules.
 - Never commit private keys, `.env` files, or production credentials.
@@ -80,9 +61,9 @@ cd discord-gateway
 ---
 
 ## 📝 Submitting Pull Requests
-1. Fork the repository.
-2. Create your feature branch (`git checkout -b feature/awesome-improvement`).
-3. Commit your changes (`git commit -m "Add Linux systemd auto-start service"`).
+1. Fork the repository on GitHub.
+2. Create your feature branch (`git checkout -b feature/awesome-feature`).
+3. Commit your changes (`git commit -m "Add automated Reddit CIDR fetcher"`).
 4. Run the test suite: `./scripts/test-suite.sh`.
-5. Push to the branch (`git push origin feature/awesome-improvement`).
-6. Open a Pull Request with a clear description of what was tested and on which OS / ISP.
+5. Push to your fork (`git push origin feature/awesome-feature`).
+6. Open a Pull Request on GitHub with a description of what was tested, on which OS, and on which Philippine ISP.

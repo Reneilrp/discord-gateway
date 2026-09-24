@@ -16,7 +16,10 @@ This repository supports two production deployment architectures depending on yo
 | **Laptop Requirement**| Laptop stays on when friends are connected | Laptop can be turned off (100% in cloud) |
 | **Multi-User Sharing**| Friends import single `vless://` link into **v2rayNG** / **FoXray** (no WireGuard keys needed) | Each friend needs a dedicated WireGuard key pair |
 | **Local Telco Bypass**| **100% Bypassed**: Laptop resolves queries via Cloudflare DoH (1.1.1.1) | **100% Bypassed**: Traffic routed via Singapore VPS |
-| **Best For** | Hosting for friends, family, and gaming squads | Dedicated, always-on personal/small team VPN |
+### 📖 Step-by-Step Setup Guides by OS:
+- 🪟 [**Windows 11 Pro Guide**](docs/WINDOWS.md) — WSL 2 Ubuntu + Mirrored Networking + Marzban Web UI
+- 🐧 [**Linux Guide**](docs/LINUX.md) — Native Docker + systemd-logind + zero virtualization overhead
+- 🍎 [**macOS Guide**](docs/MACOS.md) — Apple Silicon / Intel + OrbStack + pmset sleep prevention
 
 ---
 
