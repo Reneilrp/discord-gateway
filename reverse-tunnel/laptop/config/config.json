@@ -106,8 +106,39 @@
       },
       {
         "type": "field",
-        "network": "tcp,udp",
+        "domain": [
+          "geosite:discord",
+          "domain:discord.com",
+          "domain:discord.gg",
+          "domain:discordapp.com",
+          "domain:discordapp.net",
+          "geosite:reddit",
+          "domain:reddit.com",
+          "domain:redd.it",
+          "domain:redditmedia.com",
+          "domain:redditstatic.com",
+          "geosite:facebook",
+          "domain:facebook.com",
+          "domain:fbcdn.net",
+          "domain:instagram.com",
+          "domain:messenger.com",
+          "domain:whatsapp.com",
+          "domain:threads.net"
+        ],
         "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "ip": [
+          "162.159.128.0/21",
+          "geoip:facebook"
+        ],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "network": "tcp,udp",
+        "outboundTag": "blocked"
       }
     ]
   }

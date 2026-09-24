@@ -77,16 +77,51 @@ Here is the exact step-by-step checklist of what is left for **you** to perform:
 │   ├── generate-client-links.sh     # Generates vless:// URLs from terminal
 │   └── README.md                    # Headless reverse tunnel guide
 │
-├── fetch-discord-cidrs.sh           # AS49544 (Discord Inc.) & Cloudflare edge BGP CIDR fetcher
-├── iptables-rules.sh                # Direct VPS firewall script (Discord-only lockdown)
+├── fetch-service-cidrs.sh           # Modular BGP CIDR fetcher (Discord, Reddit, Meta/Facebook)
+├── fetch-discord-cidrs.sh           # Legacy AS49544 (Discord Inc.) BGP fetcher
+├── iptables-rules.sh                # Direct VPS firewall script (service lockdown)
 ├── docker-compose.yml               # Standalone VPS wg-easy container
 ├── sysctl.d/99-wireguard.conf       # Kernel parameters for IP forwarding & UDP buffers
 ├── scripts/
+│   ├── toggle-services.sh           # Interactive CLI to toggle Discord / Reddit / Facebook
 │   ├── update-discord-gateway.sh    # Weekly cron helper for zero-downtime BGP prefix updates
 │   └── test-suite.sh                # Automated repository verification test suite
 ├── CONTRIBUTING.md                  # Contributor guide for fellow PH programmers
 └── README.md                        # Master project guide (this document)
 ```
+
+---
+
+## 🎛️ Service Toggling (Discord, Reddit, Facebook)
+
+You are not locked into bypassing only Discord. You can choose to bypass **Discord**, **Reddit**, **Facebook (Meta / IG / Messenger)**, or any combination using our built-in toggle tool:
+
+```bash
+# Interactive selection menu:
+./scripts/toggle-services.sh
+
+# Or via command-line flags:
+./scripts/toggle-services.sh --services discord              # Discord only
+./scripts/toggle-services.sh --services discord,reddit       # Discord + Reddit
+./scripts/toggle-services.sh --services facebook             # Meta / Facebook only
+./scripts/toggle-services.sh --services all                  # All 3 platforms
+```
+
+### What this tool updates automatically:
+1. **WireGuard AllowedIPs**: Updates `.env` (`WG_ALLOWED_IPS`) and exports to `service-cidrs.txt`.
+2. **Xray-Core / Marzban Domain Rules**: Updates `geosite:discord`, `geosite:reddit`, and `geosite:facebook` routing rules in `config.json`.
+3. **Firewall Lockdown**: Updates the VPS `ipset` table when `--apply-firewall` is passed.
+
+---
+
+## 📱 Per-App Proxying on Friends' Phones
+
+Your friends can also decide *on their own devices* which apps route through your gateway!
+- **Android ([v2rayNG](https://play.google.com/store/apps/details?id=com.v2ray.ang))**:
+  Open Settings -> **Per-app proxy mode** -> Enable -> Check **Discord**, **Reddit**, and **Facebook**. All other phone traffic stays on their local connection!
+- **Windows / Mac ([Nekoray](https://github.com/MatsuriDayo/nekoray))**:
+  In Routing Settings, traffic can be filtered per process name (e.g. `Discord.exe`).
+
 
 ---
 

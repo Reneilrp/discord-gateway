@@ -27,7 +27,10 @@ WG_INTERFACE="wg0"
 WG_SUBNET="10.8.0.0/24"
 WG_SUBNET_V6="fd42:42:42::/64"
 WAN_INTERFACE=""
-CIDR_FILE="${SCRIPT_DIR}/discord-cidrs.txt"
+CIDR_FILE="${SCRIPT_DIR}/service-cidrs.txt"
+if [[ ! -f "$CIDR_FILE" && -f "${SCRIPT_DIR}/discord-cidrs.txt" ]]; then
+    CIDR_FILE="${SCRIPT_DIR}/discord-cidrs.txt"
+fi
 DNS_IPS=""                  # Empty = any DNS; or comma-separated IPs (e.g. 1.1.1.1,1.0.0.1)
 LOG_DROPS=true              # Log dropped forwarded packets (rate limited)
 DRY_RUN=false
@@ -259,14 +262,21 @@ load_cidrs() {
     local target_file="$1"
     if [[ ! -f "$target_file" ]]; then
         log_warn "CIDR file '${target_file}' not found. Attempting to fetch..."
-        if [[ -x "${SCRIPT_DIR}/fetch-discord-cidrs.sh" ]]; then
+        local fetcher=""
+        if [[ -x "${SCRIPT_DIR}/fetch-service-cidrs.sh" ]]; then
+            fetcher="${SCRIPT_DIR}/fetch-service-cidrs.sh"
+        elif [[ -x "${SCRIPT_DIR}/fetch-discord-cidrs.sh" ]]; then
+            fetcher="${SCRIPT_DIR}/fetch-discord-cidrs.sh"
+        fi
+
+        if [[ -n "$fetcher" ]]; then
             local flags=("-f" "list" "-o" "$target_file")
             if [[ "$ENABLE_IPV6" == true ]]; then
                 flags+=("--all")
             fi
-            "${SCRIPT_DIR}/fetch-discord-cidrs.sh" "${flags[@]}"
+            "$fetcher" "${flags[@]}"
         else
-            log_error "Could not find fetch-discord-cidrs.sh to generate CIDR list."
+            log_error "Could not find fetch-service-cidrs.sh or fetch-discord-cidrs.sh to generate CIDR list."
             exit 1
         fi
     fi
