@@ -17,9 +17,9 @@ This repository supports two production deployment architectures depending on yo
 | **Multi-User Sharing**| Friends import single `vless://` link into **v2rayNG** / **FoXray** (no WireGuard keys needed) | Each friend needs a dedicated WireGuard key pair |
 | **Local Telco Bypass**| **100% Bypassed**: Laptop resolves queries via Cloudflare DoH (1.1.1.1) | **100% Bypassed**: Traffic routed via Singapore VPS |
 ### 📖 Step-by-Step Setup Guides by OS:
-- 🪟 [**Windows 11 Pro Guide**](docs/WINDOWS.md) — WSL 2 Ubuntu + Mirrored Networking + Marzban Web UI
-- 🐧 [**Linux Guide**](docs/LINUX.md) — Native Docker + systemd-logind + zero virtualization overhead
-- 🍎 [**macOS Guide**](docs/MACOS.md) — Apple Silicon / Intel + OrbStack + pmset sleep prevention
+- 🪟 [**Windows 11 Pro Guide**](WINDOWS.md) — WSL 2 Ubuntu + Mirrored Networking + Marzban Web UI
+- 🐧 [**Linux Guide**](LINUX.md) — Native Docker + systemd-logind + zero virtualization overhead
+- 🍎 [**macOS Guide**](MACOS.md) — Apple Silicon / Intel + OrbStack + pmset sleep prevention
 
 ---
 
@@ -89,7 +89,10 @@ Here is the exact step-by-step checklist of what is left for **you** to perform:
 │   ├── toggle-services.sh           # Interactive CLI to toggle Discord / Reddit / Facebook
 │   ├── update-discord-gateway.sh    # Weekly cron helper for zero-downtime BGP prefix updates
 │   └── test-suite.sh                # Automated repository verification test suite
-├── CONTRIBUTING.md                  # Contributor guide for fellow PH programmers
+├── WINDOWS.md                       # 🪟 Windows 11 Pro + WSL 2 + Marzban Guide
+├── LINUX.md                         # 🐧 Native Linux (Ubuntu/Debian/Fedora/Arch) Guide
+├── MACOS.md                         # 🍎 macOS (Apple Silicon M1-M4 & Intel) Guide
+├── CONTRIBUTING.md                  # Contributor portal & roadmap for PH programmers
 └── README.md                        # Master project guide (this document)
 ```
 

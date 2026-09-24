@@ -10,9 +10,9 @@ Before contributing features, testing PRs, or reporting ISP benchmarks, set up y
 
 | Operating System | Dedicated Setup Guide | Container Engine | WireGuard Client |
 | :--- | :--- | :--- | :--- |
-| **Windows 11 Pro** | 🪟 [**Windows 11 Setup Guide**](docs/WINDOWS.md) | Docker in WSL 2 Ubuntu | WireGuard for Windows |
-| **Linux (Ubuntu/Debian/Arch/Fedora)** | 🐧 [**Linux Setup Guide**](docs/LINUX.md) | Native Docker (Zero VM overhead) | Native `wg-quick` (`wg0.conf`) |
-| **macOS (M1-M4 & Intel)** | 🍎 [**macOS Setup Guide**](docs/MACOS.md) | [OrbStack](https://orbstack.dev/) or Docker Desktop | WireGuard for Mac |
+| **Windows 11 Pro** | 🪟 [**Windows 11 Setup Guide**](WINDOWS.md) | Docker in WSL 2 Ubuntu | WireGuard for Windows |
+| **Linux (Ubuntu/Debian/Arch/Fedora)** | 🐧 [**Linux Setup Guide**](LINUX.md) | Native Docker (Zero VM overhead) | Native `wg-quick` (`wg0.conf`) |
+| **macOS (M1-M4 & Intel)** | 🍎 [**macOS Setup Guide**](MACOS.md) | [OrbStack](https://orbstack.dev/) or Docker Desktop | WireGuard for Mac |
 
 ---
 
