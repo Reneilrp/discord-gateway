@@ -238,6 +238,20 @@ See [`CONTRIBUTING.md`](file:///home/pheinz/discord-gateway/CONTRIBUTING.md) for
 
 ---
 
+## 🛡️ Security & Host Protection
+
+Hosting for friends comes with valid security questions: *What if a friend's phone has malware? Can they access my home Wi-Fi devices?*
+Read our complete [**Security Policy & Threat Mitigation Guide (SECURITY.md)**](SECURITY.md).
+
+**Key built-in defenses:**
+- 🚫 **Private LAN Isolation (`geoip:private`)**: Users/malware cannot access your home router (`192.168.1.1`), smart TVs, NAS, or family PCs.
+- 🚫 **Anti-Spam Filter**: Outgoing mail ports (`25`, `465`, `587`) are blocked so your IP cannot be abused by spam bots.
+- 🚫 **BitTorrent Block**: P2P torrenting is blocked to protect you from ISP copyright strikes.
+- 🚫 **Whitelist Isolation**: In default mode, only verified Discord, Reddit, and Facebook traffic passes; malware Command & Control (C2) connections are immediately dropped.
+- ⚡ **1-Click User Revocation**: Ban or limit any compromised friend instantly in your Marzban Web Dashboard.
+
+---
+
 ## ⚖️ License
 
 MIT License. Built for privacy, open connectivity, and digital freedom in the Philippines.

@@ -165,6 +165,16 @@ rules = [
         "type": "field",
         "ip": ["geoip:private"],
         "outboundTag": "blocked"
+    },
+    {
+        "type": "field",
+        "protocol": ["bittorrent"],
+        "outboundTag": "blocked"
+    },
+    {
+        "type": "field",
+        "port": "25,465,587",
+        "outboundTag": "blocked"
     }
 ]
 
